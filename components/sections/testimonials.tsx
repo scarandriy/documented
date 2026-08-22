@@ -3,6 +3,7 @@
 import { useCallback, useRef, useState } from "react";
 import { testimonials } from "@/lib/content";
 import { Reveal } from "@/components/motion/reveal";
+import { ArrowSide } from "@/components/ui/arrow-side";
 
 /**
  * СЕКЦИЯ 5 — отзывы.
@@ -33,13 +34,25 @@ export function Testimonials() {
     setIndex(closest);
   }, []);
 
-  const go = useCallback((dir: -1 | 1) => {
-    const rail = railRef.current;
-    if (!rail) return;
-    const items = Array.from(rail.children) as HTMLElement[];
-    const next = Math.min(Math.max(index + dir, 0), items.length - 1);
-    rail.scrollTo({ left: items[next].offsetLeft - rail.offsetLeft, behavior: "smooth" });
-  }, [index]);
+  /**
+   * Слайды выровнены по центру (snap-center), поэтому и доводить их нужно
+   * до центра ленты: при выравнивании по левому краю snap дотягивал ленту
+   * до следующего слайда и шаг получался двойным.
+   */
+  const go = useCallback(
+    (dir: -1 | 1) => {
+      const rail = railRef.current;
+      if (!rail) return;
+      const items = Array.from(rail.children) as HTMLElement[];
+      const next = Math.min(Math.max(index + dir, 0), items.length - 1);
+      const railBox = rail.getBoundingClientRect();
+      const itemBox = items[next].getBoundingClientRect();
+      const delta =
+        itemBox.left + itemBox.width / 2 - (railBox.left + railBox.width / 2);
+      rail.scrollBy({ left: delta, behavior: "smooth" });
+    },
+    [index]
+  );
 
   return (
     <section id="testimonials" className="overflow-hidden py-section">
@@ -48,32 +61,25 @@ export function Testimonials() {
           <p className="eyebrow">Отзывы</p>
         </Reveal>
 
-        <Reveal className="flex shrink-0 items-center gap-3 md:gap-6">
-          <span className="font-heading text-[0.8rem] tabular-nums text-ink-40 md:text-[0.9rem]">
-            <span className="text-ink">{String(index + 1).padStart(2, "0")}</span>
-            {" / "}
-            {String(testimonials.length).padStart(2, "0")}
-          </span>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => go(-1)}
-              disabled={index === 0}
-              aria-label="Предыдущий отзыв"
-              className="flex size-11 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-300 hover:border-ink disabled:opacity-30 disabled:hover:border-hairline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky"
-            >
-              <span aria-hidden>←</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => go(1)}
-              disabled={index === testimonials.length - 1}
-              aria-label="Следующий отзыв"
-              className="flex size-11 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-300 hover:border-ink disabled:opacity-30 disabled:hover:border-hairline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky"
-            >
-              <span aria-hidden>→</span>
-            </button>
-          </div>
+        <Reveal className="flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            disabled={index === 0}
+            aria-label="Предыдущий отзыв"
+            className="flex size-11 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-300 hover:border-ink disabled:opacity-30 disabled:hover:border-hairline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky md:size-14"
+          >
+            <ArrowSide direction="left" className="size-5 md:size-6" />
+          </button>
+          <button
+            type="button"
+            onClick={() => go(1)}
+            disabled={index === testimonials.length - 1}
+            aria-label="Следующий отзыв"
+            className="flex size-11 items-center justify-center rounded-full border border-hairline text-ink transition-colors duration-300 hover:border-ink disabled:opacity-30 disabled:hover:border-hairline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky md:size-14"
+          >
+            <ArrowSide className="size-5 md:size-6" />
+          </button>
         </Reveal>
       </div>
 
