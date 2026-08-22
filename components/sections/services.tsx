@@ -43,8 +43,10 @@ export function Services() {
         {/* Рельс табов скроллится вбок на узких экранах — переносить
             лейблы в две строки значило бы сломать линию подчёркивания.
             touch-pan-x: вертикальный свайп по рельсу должен листать
-            страницу, а не резинить сам рельс. */}
-        <TabsList className="no-scrollbar touch-pan-x select-none scroll-px-gutter snap-x snap-proximity overflow-x-auto overflow-y-hidden overscroll-contain border-b border-night-line px-gutter">
+            страницу, а не резинить сам рельс.
+            overscroll-y-auto обязателен: с `contain` по обеим осям колесо
+            мыши над рельсом залипало и страница не скроллилась. */}
+        <TabsList className="no-scrollbar touch-pan-x select-none scroll-px-gutter snap-x snap-proximity overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-auto border-b border-night-line px-gutter">
           {services.map((s) => (
             <TabsTrigger
               key={s.id}
@@ -58,7 +60,7 @@ export function Services() {
                 <motion.span
                   layoutId="services-underline"
                   aria-hidden
-                  className="absolute inset-x-0 -bottom-px right-8 h-1 bg-sky md:right-12"
+                  className="absolute inset-x-0 bottom-0 right-8 h-1 bg-sky md:right-12"
                   transition={{ duration: 0.45, ease: EASE }}
                 />
               )}
