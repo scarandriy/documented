@@ -41,8 +41,10 @@ export function Services() {
         className="mt-12 md:mt-20"
       >
         {/* Рельс табов скроллится вбок на узких экранах — переносить
-            лейблы в две строки значило бы сломать линию подчёркивания. */}
-        <TabsList className="no-scrollbar snap-x snap-mandatory overflow-x-auto overscroll-x-contain border-b border-night-line px-gutter [-webkit-overflow-scrolling:touch]">
+            лейблы в две строки значило бы сломать линию подчёркивания.
+            touch-pan-x: вертикальный свайп по рельсу должен листать
+            страницу, а не резинить сам рельс. */}
+        <TabsList className="no-scrollbar touch-pan-x select-none scroll-px-gutter snap-x snap-proximity overflow-x-auto overflow-y-hidden overscroll-contain border-b border-night-line px-gutter">
           {services.map((s) => (
             <TabsTrigger
               key={s.id}
