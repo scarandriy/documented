@@ -12,7 +12,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-night text-paper"
+      className="relative isolate flex h-dvh min-h-svh flex-col overflow-hidden bg-night text-paper md:h-auto"
     >
       <div
         aria-hidden
@@ -36,7 +36,7 @@ export function Hero() {
         }}
       />
 
-      <div className="relative flex flex-1 flex-col justify-end px-gutter pb-[max(8rem,30svh)] pt-[calc(env(safe-area-inset-top)+7.5rem)] md:justify-center md:pb-20 md:pt-28">
+      <div className="relative flex flex-1 flex-col justify-end px-gutter pb-[max(1.5rem,env(safe-area-inset-bottom)+1.25rem)] pt-[calc(env(safe-area-inset-top)+7.5rem)] md:justify-center md:pb-20 md:pt-28">
         <div className="md:grid md:grid-cols-12 md:gap-rail">
           <div className="relative md:col-span-7 xl:col-span-6">
             <div className="pointer-events-none absolute left-1/2 top-0 -z-10 w-[125vw] -translate-x-1/2 opacity-70 md:hidden">
