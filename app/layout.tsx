@@ -23,11 +23,26 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const title = `${site.name} — ${site.tagline}`;
+const description =
+  "ВНЖ, регистрация ИП и ООО, семейное право и нотариальные консультации в Грузии. Сопровождение на русском языке в Батуми и Тбилиси, прозрачные цены.";
+
 export const metadata: Metadata = {
-  // TODO(seo): вторая итерация — OG-изображение, canonical, robots, JSON-LD
-  title: `${site.name} — ${site.tagline}`,
-  description:
-    "ВНЖ, регистрация ИП и ООО, семейное право и нотариальные услуги в Грузии под ключ. Сопровождение на русском языке, фиксированные цены, честные сроки.",
+  // TODO(seo): пока указан documentebi.vercel.app — если появится свой домен
+  // (documentebi.ge?), поменять metadataBase и здесь, и в конфиге Vercel.
+  metadataBase: new URL("https://documentebi.vercel.app"),
+  title,
+  description,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title,
+    description,
+    siteName: site.name,
+    locale: "ru_GE",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
