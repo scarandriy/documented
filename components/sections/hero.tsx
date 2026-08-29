@@ -62,6 +62,8 @@ export function Hero() {
             <Reveal delay={0.38} immediate>
               <a
                 href={hero.cta.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-9 inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-paper px-6 py-3.5 text-[1.05rem] font-medium text-ink transition-transform duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper sm:w-auto md:mt-9 md:gap-4 md:px-8 md:py-5 md:text-xl"
               >
                 {hero.cta.label}

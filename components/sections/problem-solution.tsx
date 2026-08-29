@@ -1,4 +1,4 @@
-import { IdCard, Building2, Users, Stamp, type LucideIcon } from "lucide-react";
+import { IdCard, Building2, Users, type LucideIcon } from "lucide-react";
 import { problems } from "@/lib/content";
 import { Reveal } from "@/components/motion/reveal";
 
@@ -17,14 +17,13 @@ const icons: Record<(typeof problems)[number]["id"], LucideIcon> = {
   residency: IdCard,
   business: Building2,
   family: Users,
-  notary: Stamp,
 };
 
 export function ProblemSolution() {
   return (
     <section className="px-gutter pt-section pb-section-sm">
       <Reveal>
-        <p className="eyebrow">Ситуации</p>
+        <p className="eyebrow">Запросы</p>
         <h2 className="mt-4 max-w-4xl font-heading text-h2 font-medium text-ink">
           Четыре ситуации, с которыми к нам приходят чаще всего
         </h2>
@@ -37,7 +36,7 @@ export function ProblemSolution() {
             <Reveal
               key={item.id}
               delay={i * 0.05}
-              className="grid grid-cols-1 gap-y-4 border-t border-hairline py-8 last:border-b md:grid-cols-12 md:items-start md:gap-x-rail md:gap-y-6 md:py-14"
+              className="grid grid-cols-1 gap-y-4 border-t border-hairline py-8 md:grid-cols-12 md:items-start md:gap-x-rail md:gap-y-6 md:py-14"
             >
               {/* Зона 1 — тема */}
               <div className="flex items-center gap-4 md:col-span-3 md:self-center">
