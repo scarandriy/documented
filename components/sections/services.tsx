@@ -94,27 +94,34 @@ export function Services() {
 
                   <p className="eyebrow mt-8 text-paper/40">Стоимость</p>
                   <ul className="mt-4">
-                    {s.tiers.map((t) => (
-                      <li key={t.name} className="py-2.5">
-                        <div className="flex items-baseline">
-                          <span className="min-w-0 text-[0.9rem] text-paper/85">
-                            {t.name}
-                          </span>
-                          <span
-                            aria-hidden
-                            className="mx-3 min-w-4 flex-1 translate-y-[-0.3em] border-b border-dotted border-night-line"
-                          />
-                          {/* nowrap обязателен: иначе на узком экране символ
-                              лари отрывается от числа и уезжает на строку ниже. */}
-                          <span className="shrink-0 whitespace-nowrap font-heading text-[0.95rem] font-medium tabular-nums text-paper">
-                            {t.price}
-                          </span>
-                        </div>
-                        {t.note && (
-                          <p className="mt-1 text-[0.78rem] text-paper/35">
-                            {t.note}
+                    {s.tiers.map((t, i) => (
+                      <li key={t.name}>
+                        {t.group && t.group !== s.tiers[i - 1]?.group && (
+                          <p className="eyebrow mt-6 border-t border-night-line pt-6 text-paper/40">
+                            {t.group}
                           </p>
                         )}
+                        <div className="py-2.5">
+                          <div className="flex items-baseline">
+                            <span className="min-w-0 text-[0.9rem] text-paper/85">
+                              {t.name}
+                            </span>
+                            <span
+                              aria-hidden
+                              className="mx-3 min-w-4 flex-1 translate-y-[-0.3em] border-b border-dotted border-night-line"
+                            />
+                            {/* nowrap обязателен: иначе на узком экране символ
+                                лари отрывается от числа и уезжает на строку ниже. */}
+                            <span className="shrink-0 whitespace-nowrap font-heading text-[0.95rem] font-medium tabular-nums text-paper">
+                              {t.price}
+                            </span>
+                          </div>
+                          {t.note && (
+                            <p className="mt-1 text-[0.78rem] text-paper/35">
+                              {t.note}
+                            </p>
+                          )}
+                        </div>
                       </li>
                     ))}
                   </ul>
@@ -125,19 +132,22 @@ export function Services() {
                   {s.steps.map((step, i) => (
                     <li
                       key={step.title}
-                      className="grid grid-cols-[auto_1fr] items-center gap-x-4 border-t border-night-line py-4 first:border-t-0 first:pt-0 last:border-b md:gap-x-10 md:py-7 md:first:pt-0"
+                      className="grid grid-cols-[auto_1fr] items-center gap-x-5 border-t border-night-line py-5 first:border-t-0 first:pt-0 md:gap-x-12 md:py-10 md:first:pt-0"
                     >
+                      {/* Крупнее, чем базовый --text-numeral: та же шкала
+                          использована в шагах 1→2→3 в CTA-секции, трогать
+                          общий токен нельзя — привязано только к этой лестнице. */}
                       <span
                         aria-hidden
-                        className="flex items-center font-heading text-numeral font-medium leading-none text-paper/15 tabular-nums"
+                        className="flex items-center font-heading text-[clamp(2.5rem,6vw,5.25rem)] font-medium leading-none text-paper/15 tabular-nums"
                       >
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <div>
-                        <p className="font-heading text-[1.15rem] font-medium text-paper md:text-[1.4rem]">
+                        <p className="font-heading text-[1.3rem] font-medium text-paper md:text-[1.65rem]">
                           {step.title}
                         </p>
-                        <p className="mt-1.5 text-[0.9rem] text-night-60">
+                        <p className="mt-2 text-[0.95rem] leading-relaxed text-night-60 md:text-base">
                           {step.hint}
                         </p>
                       </div>

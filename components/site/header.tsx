@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { nav, site, hero } from "@/lib/content";
 
 /**
@@ -12,6 +13,7 @@ import { nav, site, hero } from "@/lib/content";
 export function Header() {
   const [atTop, setAtTop] = useState(true);
   const [lifted, setLifted] = useState(false);
+  const [activeHref, setActiveHref] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => {
@@ -21,6 +23,32 @@ export function Header() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  /**
+   * Подсветка текущего пункта меню: следим, какая секция сейчас в
+   * «активной полосе» посередине экрана — так же честно, как считает
+   * взгляд человека, а не по формальному пересечению верхней кромки.
+   */
+  useEffect(() => {
+    const sections = nav
+      .map((item) => document.querySelector(item.href))
+      .filter((el): el is Element => el !== null);
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveHref(`#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-20% 0px -70% 0px" }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -41,6 +69,8 @@ export function Header() {
           <div className="bg-sky pt-[env(safe-area-inset-top)]">
             <a
               href={hero.cta.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center justify-center px-gutter py-3.5 text-center md:py-3.5"
             >
               <span className="text-[0.75rem] font-medium uppercase leading-snug tracking-[0.06em] text-ink underline decoration-from-font underline-offset-[0.12em] md:max-w-prose md:leading-none">
@@ -72,24 +102,43 @@ export function Header() {
 
         {/* На мобильном пункты меню скрыты: единственное действие — CTA */}
         <nav className="hidden md:flex items-center gap-8">
-          {nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className={[
-                "text-[0.9rem] transition-colors duration-300",
-                lifted
-                  ? "text-ink-60 hover:text-ink"
-                  : "text-paper/70 hover:text-paper",
-              ].join(" ")}
-            >
-              {item.label}
-            </a>
-          ))}
+          {nav.map((item) => {
+            const active = activeHref === item.href;
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                className={[
+                  "relative pb-1 text-[0.9rem] transition-colors duration-300",
+                  lifted
+                    ? active
+                      ? "text-ink"
+                      : "text-ink-60 hover:text-ink"
+                    : active
+                      ? "text-paper"
+                      : "text-paper/70 hover:text-paper",
+                ].join(" ")}
+              >
+                {item.label}
+                {active && (
+                  <motion.span
+                    layoutId="header-nav-active"
+                    aria-hidden
+                    className={`absolute inset-x-0 -bottom-0.5 h-px ${
+                      lifted ? "bg-ink" : "bg-paper"
+                    }`}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  />
+                )}
+              </a>
+            );
+          })}
         </nav>
 
         <a
           href={hero.cta.href}
+          target="_blank"
+          rel="noopener noreferrer"
           className={[
             "inline-flex min-h-11 shrink-0 items-center rounded-full px-4 py-2 text-[0.85rem] font-medium transition-colors duration-500 md:min-h-0 md:px-5 md:py-2.5 md:text-[0.9rem]",
             lifted
