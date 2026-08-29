@@ -110,9 +110,12 @@ export function Services() {
                               aria-hidden
                               className="mx-3 min-w-4 flex-1 translate-y-[-0.3em] border-b border-dotted border-night-line"
                             />
-                            {/* nowrap обязателен: иначе на узком экране символ
-                                лари отрывается от числа и уезжает на строку ниже. */}
-                            <span className="shrink-0 whitespace-nowrap font-heading text-[0.95rem] font-medium tabular-nums text-paper">
+                            {/* Перенос по словам разрешён (длинный текст вроде
+                                «уточняется индивидуально» иначе вылезает за
+                                край экрана на мобильном) — а числа с валютой
+                                не рвутся благодаря неразрывному пробелу прямо
+                                в данных (lib/content.ts), не тут. */}
+                            <span className="shrink-0 max-w-[55%] text-right font-heading text-[0.95rem] font-medium tabular-nums text-paper">
                               {t.price}
                             </span>
                           </div>
