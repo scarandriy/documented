@@ -114,9 +114,17 @@ export function Services() {
                                 «уточняется индивидуально» иначе вылезает за
                                 край экрана на мобильном) — а числа с валютой
                                 не рвутся благодаря неразрывному пробелу прямо
-                                в данных (lib/content.ts), не тут. */}
+                                в данных (lib/content.ts), не тут. priceShort —
+                                укороченная версия для мобильного, если задана. */}
                             <span className="shrink-0 max-w-[55%] text-right font-heading text-[0.95rem] font-medium tabular-nums text-paper">
-                              {t.price}
+                              {t.priceShort ? (
+                                <>
+                                  <span className="md:hidden">{t.priceShort}</span>
+                                  <span className="hidden md:inline">{t.price}</span>
+                                </>
+                              ) : (
+                                t.price
+                              )}
                             </span>
                           </div>
                           {t.note && (
@@ -128,6 +136,12 @@ export function Services() {
                       </li>
                     ))}
                   </ul>
+
+                  {s.feesNote && (
+                    <p className="mt-6 border-t border-night-line pt-4 text-[0.78rem] text-paper/35">
+                      {s.feesNote}
+                    </p>
+                  )}
                 </div>
 
                 {/* Правая колонка — нумерованная лестница шагов */}
