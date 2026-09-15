@@ -3,49 +3,63 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { form as copy } from "@/lib/content";
+import { leadSchema, topicLabel, type LeadInput } from "@/lib/lead";
 import { ArrowUpRight } from "@/components/ui/arrow-up-right";
+
+const WEB3FORMS_URL = "https://api.web3forms.com/submit";
 
 /**
  * Форма заявки. Поля оформлены ТОЛЬКО нижней линией — на цветной подложке
  * инпуты-коробочки дали бы ту самую «рамку внутри рамки».
+ * Отправка — прямой POST на Web3Forms, как в их сниппете.
  */
-
-const schema = z.object({
-  name: z.string().trim().min(2, "Как к вам обращаться?"),
-  contact: z
-    .string()
-    .trim()
-    .min(5, "Телефон, телеграм или почта — как вам удобнее"),
-  topic: z.string().min(1, "Выберите направление"),
-  message: z.string().trim().max(600, "Слишком длинно — расскажите короче").optional(),
-  consent: z.literal(true, { message: "Без согласия мы не сможем ответить" }),
-});
-
-type FormValues = z.input<typeof schema>;
 
 const fieldBase =
   "w-full border-0 border-b border-ink/25 bg-transparent pb-2.5 text-base text-ink placeholder:text-ink/45 outline-none transition-colors duration-300 focus:border-ink focus-visible:ring-0";
 
-export function LeadForm() {
+export function LeadForm({ accessKey }: { accessKey: string }) {
   const [sent, setSent] = useState(false);
+  const [sendError, setSendError] = useState(false);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
+  } = useForm<LeadInput>({
+    resolver: zodResolver(leadSchema),
     defaultValues: { name: "", contact: "", topic: "", message: "" },
   });
 
-  const onSubmit = async (values: FormValues) => {
-    // TODO(backend): отправлять на реальный эндпоинт / в CRM.
-    // Сейчас заявка только логируется — бэкенда во второй итерации нет.
-    console.log("[lead-form] заявка:", values);
-    setSent(true);
-    reset();
+  const onSubmit = async (values: LeadInput) => {
+    setSendError(false);
+    const payload = new FormData();
+    payload.set("access_key", accessKey);
+    payload.set("from_name", "Documentebi");
+    payload.set("subject", `Заявка: ${topicLabel(values.topic)} — ${values.name}`);
+    payload.set("name", values.name);
+    payload.set(
+      "email",
+      values.contact.includes("@") ? values.contact : "documentebiteam@gmail.com"
+    );
+    payload.set("contact", values.contact);
+    payload.set("topic", topicLabel(values.topic));
+    payload.set("message", values.message?.trim() || "—");
+
+    try {
+      const res = await fetch(WEB3FORMS_URL, { method: "POST", body: payload });
+      const result = (await res.json().catch(() => null)) as
+        | { success?: boolean }
+        | null;
+      if (!res.ok || !result?.success) {
+        setSendError(true);
+        return;
+      }
+      setSent(true);
+      reset();
+    } catch {
+      setSendError(true);
+    }
   };
 
   if (sent) {
@@ -57,7 +71,16 @@ export function LeadForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-7">
+    <form
+      action="https://api.web3forms.com/submit"
+      method="POST"
+      onSubmit={handleSubmit(onSubmit)}
+      noValidate
+      className="space-y-7"
+    >
+      <input type="hidden" name="access_key" value={accessKey} />
+      <input type="hidden" name="from_name" value="Documentebi" />
+      <input type="hidden" name="subject" value="Заявка с сайта Documentebi" />
       <div>
         <label htmlFor="lf-name" className="eyebrow block text-ink/60">
           Имя
@@ -146,14 +169,19 @@ export function LeadForm() {
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-ink px-7 py-4 font-medium text-paper transition-transform duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink md:w-auto"
-      >
-        {copy.submit}
-        <ArrowUpRight className="size-4" />
-      </button>
+      <div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-full bg-ink px-7 py-4 font-medium text-paper transition-transform duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ink md:w-auto"
+        >
+          {copy.submit}
+          <ArrowUpRight className="size-4" />
+        </button>
+        {sendError && (
+          <p className="mt-3 text-[0.8rem] text-ink/70">{copy.error}</p>
+        )}
+      </div>
     </form>
   );
 }

@@ -61,7 +61,7 @@ export function StartCta() {
                 {formCopy.lead}
               </p>
               <div className="mt-7 md:mt-9">
-                <LeadForm />
+                <LeadForm accessKey={process.env.WEB3FORMS_ACCESS_KEY ?? ""} />
               </div>
             </div>
           </Reveal>
