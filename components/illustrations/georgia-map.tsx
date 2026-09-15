@@ -73,7 +73,12 @@ export function GeorgiaMap({ className }: { className?: string }) {
               stroke="#5aa9e6"
               strokeWidth={1}
               vectorEffect="non-scaling-stroke"
-              animate={{ r: [6, 30], opacity: [0.5, 0] }}
+              // Анимируем scale, а не r: в подключённой версии framer-motion
+              // прямая анимация SVG-атрибута r падает с "Expected length,
+              // undefined" — transform-based анимация этого не имеет, и
+              // масштаб идёт от центра фигуры (framer-motion сам ставит
+              // transform-box: fill-box для SVG-элементов).
+              animate={{ scale: [1, 5], opacity: [0.5, 0] }}
               transition={{
                 duration: 3.4,
                 ease: "easeOut",

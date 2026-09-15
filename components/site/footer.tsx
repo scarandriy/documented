@@ -1,5 +1,6 @@
 import { footer, nav, site } from "@/lib/content";
 import { ArrowUpRight } from "@/components/ui/arrow-up-right";
+import { Instagram } from "@/components/ui/instagram";
 
 /**
  * Подвал по образцу «имя бренда как цоколь»: сверху — тихий набор
@@ -44,6 +45,16 @@ export function Footer() {
                 </li>
               ))}
             </ul>
+
+            <a
+              href={site.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="-m-2 mt-4 flex w-fit p-2 text-paper transition-transform duration-300 ease-[var(--ease-out-soft)] hover:-translate-y-0.5 hover:rotate-6 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-paper md:ml-auto md:mt-6"
+            >
+              <Instagram className="size-9 md:size-10" />
+            </a>
           </nav>
         </div>
 
