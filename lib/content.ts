@@ -13,8 +13,8 @@ export const site = {
   wordmark: "documentebi",
   tagline: "Юридические услуги для бизнеса и частных лиц в Грузии",
   city: "Батуми и Тбилиси, Грузия",
-  // TODO(backend): подставить реальные контакты перед запуском
-  telegram: "https://t.me/documentebi",
+  // Единственное место для ссылки Telegram — все CTA берут её отсюда
+  telegram: "https://t.me/m/imc8LNOWYjIy",
   whatsapp: `https://wa.me/995555727798?text=${encodeURIComponent(
     "Здравствуйте, хочу получить консультацию!"
   )}`,
