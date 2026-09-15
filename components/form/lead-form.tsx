@@ -147,7 +147,7 @@ export function LeadForm({ accessKey }: { accessKey: string }) {
           rows={2}
           {...register("message")}
           className={`${fieldBase} mt-2 resize-none`}
-          placeholder="Недавно переехали в Грузию, хочу податься на ВНЖ"
+          placeholder="Например: Недавно переехал в Грузию, хочу подать заявку на ВНЖ"
         />
         {errors.message && (
           <p className="mt-2 text-[0.8rem] text-ink/70">{errors.message.message}</p>
